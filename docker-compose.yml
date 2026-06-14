@@ -1,0 +1,29 @@
+services:
+  java-backend:
+    build: .
+    platform: linux/amd64
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      - OPENCELLID_API_KEY=pk.d130692e90e27412ff425d2052f059bc
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/ModemLocationDB
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SERVER_PORT=${APP_PORT}
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=ModemLocationDB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pg_modem_data:/var/lib/postgresql/data
+
+volumes:
+  pg_modem_data:
+
